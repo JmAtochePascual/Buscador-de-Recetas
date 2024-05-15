@@ -40,6 +40,7 @@ const consultarRecetas = () => {
 
 // Muestra las recetas en el DOM
 const mostrarRecetas = (recetas = []) => {
+  limpiarHTML(resultadoElement);
 
   recetas.forEach((receta) => {
     const { idMeal, strMeal, strMealThumb } = receta;
@@ -70,11 +71,17 @@ const mostrarRecetas = (recetas = []) => {
     recetaBody.append(recetaHeading, recetaButton);
     recetaCard.append(recetaImagen, recetaBody);
     resultadoContenedor.appendChild(recetaCard);
-
     resultadoElement.appendChild(resultadoContenedor);
   });
 };
 
+
+// Limpiar HTML
+const limpiarHTML = (selector) => {
+  while (selector.firstChild) {
+    selector.firstChild.remove();
+  }
+};
 
 // Cargar Eventos
 document.addEventListener('DOMContentLoaded', () => {
