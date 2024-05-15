@@ -42,6 +42,11 @@ const consultarRecetas = () => {
 const mostrarRecetas = (recetas = []) => {
   limpiarHTML(resultadoElement);
 
+  const titulo = document.createElement('h3');
+  titulo.classList.add('text-center', 'text-black', 'my-5');
+  titulo.textContent = recetas.length ? 'Resultados' : 'No hay resultados, intenta con otra categoría';
+  resultadoElement.appendChild(titulo);
+
   recetas.forEach((receta) => {
     const { idMeal, strMeal, strMealThumb } = receta;
 
