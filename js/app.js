@@ -1,5 +1,6 @@
 // Selectores
 const categoriasSelectElement = document.querySelector('#categorias');
+const resultadoElement = document.querySelector('#resultado');
 
 // Carga las categorias 
 const cargarCategorias = () => {
@@ -25,18 +26,58 @@ const mostrarCategorias = (categorias) => {
 
 
 // Carga las recetas
-const cargarRecetas = () => {
+const consultarRecetas = () => {
   const categoria = categoriasSelectElement.value;
   const URL = `https://www.themealdb.com/api/json/v1/1/filter.php?c=${categoria}`;
 
   fetch(URL)
     .then((response) => response.json())
     .then((data) => {
-      console.log(data.meals);
+      mostrarRecetas(data.meals);
     });
 };
+
+
+// Muestra las recetas en el DOM
+const mostrarRecetas = (recetas = []) => {
+
+  recetas.forEach((receta) => {
+    const { idMeal, strMeal, strMealThumb } = receta;
+
+    const resultadoContenedor = document.createElement('div');
+    resultadoContenedor.classList.add('col-md-4');
+
+    const recetaCard = document.createElement('div');
+    recetaCard.classList.add('card', 'mb-4', 'shadow-sm');
+
+    const recetaImagen = document.createElement('img');
+    recetaImagen.classList.add('card-img-top');
+    recetaImagen.alt = `Imagen de la receta ${strMeal}`;
+    recetaImagen.src = strMealThumb;
+
+    const recetaBody = document.createElement('div');
+    recetaBody.classList.add('card-body');
+
+    const recetaHeading = document.createElement('h3');
+    recetaHeading.classList.add('card-title', 'mb-3');
+    recetaHeading.textContent = strMeal;
+
+    const recetaButton = document.createElement('button');
+    recetaButton.classList.add('btn', 'btn-danger', 'w-100');
+    recetaButton.textContent = 'Ver receta';
+
+    // Agregar al HTML
+    recetaBody.append(recetaHeading, recetaButton);
+    recetaCard.append(recetaImagen, recetaBody);
+    resultadoContenedor.appendChild(recetaCard);
+
+    resultadoElement.appendChild(resultadoContenedor);
+  });
+};
+
+
 // Cargar Eventos
 document.addEventListener('DOMContentLoaded', () => {
   cargarCategorias();
-  categoriasSelectElement.addEventListener('change', cargarRecetas);
+  categoriasSelectElement.addEventListener('change', consultarRecetas);
 });
