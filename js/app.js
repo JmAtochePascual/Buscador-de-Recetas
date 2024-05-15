@@ -8,8 +8,19 @@ const cargarCategorias = () => {
   fetch(URL)
     .then((response) => response.json())
     .then((data) => {
-      const categorias = data.categories;
+      mostrarCategorias(data.categories);
     });
+};
+
+
+// Muestra las categorias en el select
+const mostrarCategorias = (categorias) => {
+  categorias.forEach((categoria) => {
+    const optionElement = document.createElement('option');
+    optionElement.value = categoria.strCategory;
+    optionElement.textContent = categoria.strCategory;
+    categoriasSelectElement.appendChild(optionElement);
+  });
 };
 
 // Cargar Eventos
