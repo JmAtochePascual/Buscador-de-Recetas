@@ -71,6 +71,7 @@ const mostrarRecetas = (recetas = []) => {
     const recetaButton = document.createElement('button');
     recetaButton.classList.add('btn', 'btn-danger', 'w-100');
     recetaButton.textContent = 'Ver receta';
+    recetaButton.onclick = () => consultarReceta(idMeal);
 
     // Agregar al HTML
     recetaBody.append(recetaHeading, recetaButton);
@@ -87,6 +88,19 @@ const limpiarHTML = (selector) => {
     selector.firstChild.remove();
   }
 };
+
+
+// Consultar receta por ID
+const consultarReceta = (id) => {
+  const URL = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`;
+
+  fetch(URL)
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data.meals[0]);
+    });
+};
+
 
 // Cargar Eventos
 document.addEventListener('DOMContentLoaded', () => {
