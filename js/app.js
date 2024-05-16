@@ -160,9 +160,15 @@ const mostrarRecetaModal = (receta) => {
 
 // Agreagar a favoritos
 const agregarFavorito = (receta) => {
+  const favoritos = obtenerFavoritos();
+
 };
 
+// Obtiene los favoritos del local storage
 const obtenerFavoritos = () => JSON.parse(localStorage.getItem('favoritos')) || [];
+
+// Valida si la receta ya esta en favoritos
+const validarFavorito = (receta, favoritos) => favoritos.some((favorito) => favorito.idMeal === receta.idMeal);
 
 // Cargar Eventos
 document.addEventListener('DOMContentLoaded', () => {
