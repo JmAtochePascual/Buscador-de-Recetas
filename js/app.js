@@ -177,7 +177,10 @@ const agregarFavorito = (receta) => {
     const newFavoritos = [...favoritos, receta];
     localStorage.setItem('favoritos', JSON.stringify(newFavoritos));
     mostrarToast('Receta agregada a favoritos');
-  };
+    return;
+  } else {
+    mostrarToast('Esta receta ya existe en favoritos');
+  }
 };
 
 // Obtiene los favoritos del local storage
