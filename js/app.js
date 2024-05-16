@@ -146,8 +146,17 @@ const mostrarRecetaModal = (receta) => {
   // Bortones de favoritos y cerrar
   const btnFavoritos = document.createElement('button');
   btnFavoritos.classList.add('btn', 'btn-danger', 'col');
-  btnFavoritos.textContent = 'Agregar a favoritos';
-  btnFavoritos.onclick = () => agregarFavorito(receta);
+  favoritosElement ? btnFavoritos.textContent = 'Quitar de favoritos' : btnFavoritos.textContent = 'Agregar a favoritos';
+
+  btnFavoritos.onclick = () => {
+    if (favoritosElement) {
+      eliminarFavorito(receta)
+      modalElement.hide();
+      return;
+    }
+
+    agregarFavorito(receta);
+  };
 
   const btnCerrar = document.createElement('button');
   btnCerrar.classList.add('btn', 'btn-secondary', 'col');
@@ -158,6 +167,7 @@ const mostrarRecetaModal = (receta) => {
 
   modalElement.show();
 };
+
 
 // Agreagar a favoritos
 const agregarFavorito = (receta) => {
@@ -172,6 +182,7 @@ const agregarFavorito = (receta) => {
 
 // Obtiene los favoritos del local storage
 const obtenerFavoritos = () => JSON.parse(localStorage.getItem('favoritos')) || [];
+
 
 // Valida si la receta ya esta en favoritos
 const validarFavorito = (receta, favoritos) => favoritos.some((favorito) => favorito.idMeal === receta.idMeal);
@@ -203,6 +214,15 @@ const mostrarFavoritos = () => {
 };
 
 
+// Elimina un favorito 
+const eliminarFavorito = (receta) => {
+  const favoritos = obtenerFavoritos();
+  const newFavoritos = favoritos.filter((favorito) => favorito.idMeal !== receta.idMeal);
+  mostrarRecetas(newFavoritos);
+
+  localStorage.setItem('favoritos', JSON.stringify(newFavoritos));
+  mostrarToast('Receta eliminada de favoritos');
+};
 
 // Cargar Eventos
 document.addEventListener('DOMContentLoaded', () => {
