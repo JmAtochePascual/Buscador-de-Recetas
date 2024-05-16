@@ -2,6 +2,8 @@
 const categoriasSelectElement = document.querySelector('#categorias');
 const resultadoElement = document.querySelector('#resultado');
 const modalElement = new bootstrap.Modal('#modal', {});
+const favoritosElement = document.querySelector('.favoritos');
+
 
 // Carga las categorias 
 const cargarCategorias = () => {
@@ -185,8 +187,26 @@ const mostrarToast = (mensaje) => {
   bsToast.show();
 };
 
+
+// Muestra los favoritos en el DOM
+const mostrarFavoritos = () => {
+  const favoritos = obtenerFavoritos();
+
+  if (favoritos.length) {
+    mostrarRecetas(favoritos);
+    return;
+  }
+  const titulo = document.createElement('h3');
+  titulo.classList.add('text-center', 'text-black', 'my-5');
+  titulo.textContent = 'No hay recetas favoritas';
+  favoritosElement.appendChild(titulo);
+};
+
+
+
 // Cargar Eventos
 document.addEventListener('DOMContentLoaded', () => {
   cargarCategorias();
   categoriasSelectElement?.addEventListener('change', consultarRecetas);
+  if (favoritosElement) mostrarFavoritos();
 });
