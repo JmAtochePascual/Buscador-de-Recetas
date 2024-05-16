@@ -162,6 +162,10 @@ const mostrarRecetaModal = (receta) => {
 const agregarFavorito = (receta) => {
   const favoritos = obtenerFavoritos();
 
+  if (!validarFavorito(receta, favoritos)) {
+    const newFavoritos = [...favoritos, receta];
+    localStorage.setItem('favoritos', JSON.stringify(newFavoritos));
+  };
 };
 
 // Obtiene los favoritos del local storage
