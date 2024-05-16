@@ -2,7 +2,6 @@
 const categoriasSelectElement = document.querySelector('#categorias');
 const resultadoElement = document.querySelector('#resultado');
 const modalElement = new bootstrap.Modal('#modal', {});
-// const favoritos = JSON.parse(localStorage.getItem('favoritos')) || [];
 
 // Carga las categorias 
 const cargarCategorias = () => {
@@ -22,7 +21,7 @@ const mostrarCategorias = (categorias) => {
     const optionElement = document.createElement('option');
     optionElement.value = categoria.strCategory;
     optionElement.textContent = categoria.strCategory;
-    categoriasSelectElement.appendChild(optionElement);
+    categoriasSelectElement?.appendChild(optionElement);
   });
 };
 
@@ -165,6 +164,7 @@ const agregarFavorito = (receta) => {
   if (!validarFavorito(receta, favoritos)) {
     const newFavoritos = [...favoritos, receta];
     localStorage.setItem('favoritos', JSON.stringify(newFavoritos));
+    mostrarToast('Receta agregada a favoritos');
   };
 };
 
@@ -174,8 +174,19 @@ const obtenerFavoritos = () => JSON.parse(localStorage.getItem('favoritos')) || 
 // Valida si la receta ya esta en favoritos
 const validarFavorito = (receta, favoritos) => favoritos.some((favorito) => favorito.idMeal === receta.idMeal);
 
+
+// Muestra toast
+const mostrarToast = (mensaje) => {
+  const toast = document.querySelector('#toast');
+  const toastBody = document.querySelector('.toast-body');
+  const bsToast = new bootstrap.Toast(toast);
+  toastBody.textContent = mensaje;
+
+  bsToast.show();
+};
+
 // Cargar Eventos
 document.addEventListener('DOMContentLoaded', () => {
   cargarCategorias();
-  categoriasSelectElement.addEventListener('change', consultarRecetas);
+  categoriasSelectElement?.addEventListener('change', consultarRecetas);
 });
