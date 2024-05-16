@@ -2,6 +2,7 @@
 const categoriasSelectElement = document.querySelector('#categorias');
 const resultadoElement = document.querySelector('#resultado');
 const modalElement = new bootstrap.Modal('#modal', {});
+// const favoritos = JSON.parse(localStorage.getItem('favoritos')) || [];
 
 // Carga las categorias 
 const cargarCategorias = () => {
@@ -145,6 +146,7 @@ const mostrarRecetaModal = (receta) => {
   const btnFavoritos = document.createElement('button');
   btnFavoritos.classList.add('btn', 'btn-danger', 'col');
   btnFavoritos.textContent = 'Agregar a favoritos';
+  btnFavoritos.onclick = () => agregarFavorito(receta);
 
   const btnCerrar = document.createElement('button');
   btnCerrar.classList.add('btn', 'btn-secondary', 'col');
@@ -155,6 +157,12 @@ const mostrarRecetaModal = (receta) => {
 
   modalElement.show();
 };
+
+// Agreagar a favoritos
+const agregarFavorito = (receta) => {
+};
+
+const obtenerFavoritos = () => JSON.parse(localStorage.getItem('favoritos')) || [];
 
 // Cargar Eventos
 document.addEventListener('DOMContentLoaded', () => {
