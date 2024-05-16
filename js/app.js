@@ -1,6 +1,7 @@
 // Selectores
 const categoriasSelectElement = document.querySelector('#categorias');
 const resultadoElement = document.querySelector('#resultado');
+const modalElement = new bootstrap.Modal('#modal', {});
 
 // Carga las categorias 
 const cargarCategorias = () => {
@@ -97,10 +98,47 @@ const consultarReceta = (id) => {
   fetch(URL)
     .then((response) => response.json())
     .then((data) => {
-      console.log(data.meals[0]);
+      mostrarRecetaModal(data.meals[0]);
     });
 };
 
+
+//  Muestra una receta en el DOM
+const mostrarRecetaModal = (receta) => {
+  const { idMeal, strInstructions, strMeal, strMealThumb } = receta;
+
+  const modalTitle = document.querySelector('.modal .modal-title');
+  const modalBody = document.querySelector('.modal .modal-body');
+  const modalImage = document.querySelector('.modal .modal-image');
+
+  modalTitle.textContent = strMeal;
+  modalBody.innerHTML = `
+  <img class="img-fluid" src="${strMealThumb}" alt="Imagen de la receta ${strMeal}"/>
+  <h3 class="my-3">Instrucciones</h3>
+  <p>${strInstructions}</p>
+  <h3 class="my-3">Ingredientes y Cnatidades</h3>
+  `;
+
+  const listGroup = document.createElement('ul');
+  listGroup.classList.add('list-group');
+
+  // Mostrar ingredientes
+  for (let i = 1; i <= 20; i++) {
+    const ingrediente = receta[`strIngredient${i}`];
+    const cantidad = receta[`strMeasure${i}`];
+
+    if (ingrediente) {
+      const ingredienteElement = document.createElement('li');
+      ingredienteElement.classList.add('list-group-item');
+      ingredienteElement.textContent = `${ingrediente} - ${cantidad}`;
+
+      listGroup.appendChild(ingredienteElement);
+    }
+  }
+
+  modalBody.appendChild(listGroup);
+  modalElement.show();
+};
 
 // Cargar Eventos
 document.addEventListener('DOMContentLoaded', () => {
