@@ -137,6 +137,22 @@ const mostrarRecetaModal = (receta) => {
   }
 
   modalBody.appendChild(listGroup);
+
+  const modalFooter = document.querySelector('.modal-footer');
+  limpiarHTML(modalFooter);
+
+  // Bortones de favoritos y cerrar
+  const btnFavoritos = document.createElement('button');
+  btnFavoritos.classList.add('btn', 'btn-danger', 'col');
+  btnFavoritos.textContent = 'Agregar a favoritos';
+
+  const btnCerrar = document.createElement('button');
+  btnCerrar.classList.add('btn', 'btn-secondary', 'col');
+  btnCerrar.textContent = 'Cerrar';
+  btnCerrar.onclick = () => modalElement.hide();
+
+  modalFooter.append(btnFavoritos, btnCerrar);
+
   modalElement.show();
 };
 
