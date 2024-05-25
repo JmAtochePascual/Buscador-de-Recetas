@@ -98,14 +98,16 @@ const limpiarHTML = (selector) => {
 
 
 // Consultar receta por ID
-const consultarReceta = (id) => {
+const consultarReceta = async (id) => {
   const URL = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`;
 
-  fetch(URL)
-    .then((response) => response.json())
-    .then((data) => {
-      mostrarRecetaModal(data.meals[0]);
-    });
+  try {
+    const response = await fetch(URL);
+    const data = await response.json();
+    mostrarRecetaModal(data.meals[0]);
+  } catch (error) {
+    console.error(error, 'Error al cargar la receta');
+  }
 };
 
 
