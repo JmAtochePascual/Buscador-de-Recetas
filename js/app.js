@@ -6,14 +6,16 @@ const favoritosElement = document.querySelector('.favoritos');
 
 
 // Carga las categorias 
-const cargarCategorias = () => {
+const cargarCategorias = async () => {
   const URL = `https://www.themealdb.com/api/json/v1/1/categories.php`;
 
-  fetch(URL)
-    .then((response) => response.json())
-    .then((data) => {
-      mostrarCategorias(data.categories);
-    });
+  try {
+    const response = await fetch(URL);
+    const data = await response.json();
+    mostrarCategorias(data.categories);
+  } catch (error) {
+    console.error(error, 'Error al cargar las categorias');
+  }
 };
 
 
