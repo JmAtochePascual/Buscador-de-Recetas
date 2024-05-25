@@ -31,15 +31,17 @@ const mostrarCategorias = (categorias) => {
 
 
 // Carga las recetas
-const consultarRecetas = () => {
+const consultarRecetas = async () => {
   const categoria = categoriasSelectElement.value;
   const URL = `https://www.themealdb.com/api/json/v1/1/filter.php?c=${categoria}`;
 
-  fetch(URL)
-    .then((response) => response.json())
-    .then((data) => {
-      mostrarRecetas(data.meals);
-    });
+  try {
+    const response = await fetch(URL);
+    const data = await response.json();
+    mostrarRecetas(data.meals);
+  } catch (error) {
+    console.error(error, 'Error al cargar las recetas');
+  }
 };
 
 
