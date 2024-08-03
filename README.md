@@ -62,6 +62,6 @@ Este proyecto está bajo la licencia [MIT](https://opensource.org/licenses/MIT).
 
 ## 🌐 Ver Proyecto en la WEB
 
-Puedes ver el proyecto en funcionamiento [aquí](https://jmatochepacual.github.io/Recetario/).
+Puedes ver el proyecto en funcionamiento [aquí](https://jmatochepascual.github.io/Buscador-de-Recetas/).
 
 Todos los derechos reservados Recetario en Línea 2024 ©.
