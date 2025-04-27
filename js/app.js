@@ -1,126 +1,111 @@
-// Selectores
-const categoriasSelectElement = document.querySelector('#categorias');
-const resultadoElement = document.querySelector('#resultado');
+const categorySelectElement = document.querySelector('#categorias');
+const favoritesElement = document.querySelector('.favoritos');
 const modalElement = new bootstrap.Modal('#modal', {});
-const favoritosElement = document.querySelector('.favoritos');
+const resultElement = document.querySelector('#resultado');
 
-
-// Carga las categorias 
-const cargarCategorias = async () => {
+const getCategories = async () => {
   const URL = `https://www.themealdb.com/api/json/v1/1/categories.php`;
 
   try {
     const response = await fetch(URL);
     const data = await response.json();
-    mostrarCategorias(data.categories);
+    showCategories(data.categories);
   } catch (error) {
     console.error(error, 'Error al cargar las categorias');
-  }
+  };
 };
 
-
-// Muestra las categorias en el select
-const mostrarCategorias = (categorias) => {
-  categorias.forEach((categoria) => {
+const showCategories = (categories) => {
+  categories.forEach((category) => {
     const optionElement = document.createElement('option');
-    optionElement.value = categoria.strCategory;
-    optionElement.textContent = categoria.strCategory;
-    categoriasSelectElement?.appendChild(optionElement);
+    optionElement.value = category.strCategory;
+    optionElement.textContent = category.strCategory;
+    categorySelectElement?.appendChild(optionElement);
   });
 };
 
-
-// Carga las recetas
-const consultarRecetas = async () => {
-  const categoria = categoriasSelectElement.value;
-  const URL = `https://www.themealdb.com/api/json/v1/1/filter.php?c=${categoria}`;
+const getRecepies = async () => {
+  const category = categorySelectElement.value;
+  const URL = `https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`;
 
   try {
     const response = await fetch(URL);
     const data = await response.json();
-    mostrarRecetas(data.meals);
+    showRecipies(data.meals);
   } catch (error) {
     console.error(error, 'Error al cargar las recetas');
-  }
+  };
 };
 
+const showRecipies = (recepies = []) => {
+  cleanHtml(resultElement);
 
-// Muestra las recetas en el DOM
-const mostrarRecetas = (recetas = []) => {
-  limpiarHTML(resultadoElement);
+  const titleElement = document.createElement('h3');
+  titleElement.classList.add('text-center', 'text-black', 'my-5');
+  titleElement.textContent = recepies.length ? 'Resultados' : 'No hay resultados, intenta con otra categoría';
+  resultElement.appendChild(titleElement);
 
-  const titulo = document.createElement('h3');
-  titulo.classList.add('text-center', 'text-black', 'my-5');
-  titulo.textContent = recetas.length ? 'Resultados' : 'No hay resultados, intenta con otra categoría';
-  resultadoElement.appendChild(titulo);
+  recepies.forEach((recepy) => {
+    const { idMeal, strMeal, strMealThumb } = recepy;
 
-  recetas.forEach((receta) => {
-    const { idMeal, strMeal, strMealThumb } = receta;
+    const resultContainerElement = document.createElement('div');
+    resultContainerElement.classList.add('col-md-4');
 
-    const resultadoContenedor = document.createElement('div');
-    resultadoContenedor.classList.add('col-md-4');
+    const recepyCard = document.createElement('div');
+    recepyCard.classList.add('card', 'mb-4', 'shadow-sm');
 
-    const recetaCard = document.createElement('div');
-    recetaCard.classList.add('card', 'mb-4', 'shadow-sm');
+    const recepyImage = document.createElement('img');
+    recepyImage.classList.add('card-img-top');
+    recepyImage.alt = `Imagen de la receta ${strMeal}`;
+    recepyImage.src = strMealThumb;
 
-    const recetaImagen = document.createElement('img');
-    recetaImagen.classList.add('card-img-top');
-    recetaImagen.alt = `Imagen de la receta ${strMeal}`;
-    recetaImagen.src = strMealThumb;
+    const recepyBody = document.createElement('div');
+    recepyBody.classList.add('card-body');
 
-    const recetaBody = document.createElement('div');
-    recetaBody.classList.add('card-body');
+    const recepyHead = document.createElement('h3');
+    recepyHead.classList.add('card-title', 'mb-3');
+    recepyHead.textContent = strMeal;
 
-    const recetaHeading = document.createElement('h3');
-    recetaHeading.classList.add('card-title', 'mb-3');
-    recetaHeading.textContent = strMeal;
+    const recepyButton = document.createElement('button');
+    recepyButton.classList.add('btn', 'btn-danger', 'w-100');
+    recepyButton.textContent = 'Ver receta';
+    recepyButton.onclick = () => getRecipy(idMeal);
 
-    const recetaButton = document.createElement('button');
-    recetaButton.classList.add('btn', 'btn-danger', 'w-100');
-    recetaButton.textContent = 'Ver receta';
-    recetaButton.onclick = () => consultarReceta(idMeal);
-
-    // Agregar al HTML
-    recetaBody.append(recetaHeading, recetaButton);
-    recetaCard.append(recetaImagen, recetaBody);
-    resultadoContenedor.appendChild(recetaCard);
-    resultadoElement.appendChild(resultadoContenedor);
+    recepyBody.append(recepyHead, recepyButton);
+    recepyCard.append(recepyImage, recepyBody);
+    resultContainerElement.appendChild(recepyCard);
+    resultElement.appendChild(resultContainerElement);
   });
 };
 
-
-// Limpiar HTML
-const limpiarHTML = (selector) => {
-  while (selector.firstChild) {
-    selector.firstChild.remove();
-  }
+const cleanHtml = (element) => {
+  while (element.firstChild) {
+    element.firstChild.remove();
+  };
 };
 
-
-// Consultar receta por ID
-const consultarReceta = async (id) => {
+const getRecipy = async (id) => {
   const URL = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`;
 
   try {
     const response = await fetch(URL);
     const data = await response.json();
-    mostrarRecetaModal(data.meals[0]);
+    showModal(data.meals[0]);
   } catch (error) {
     console.error(error, 'Error al cargar la receta');
-  }
+  };
 };
 
+const showModal = (recepy) => {
+  // const { idMeal, strInstructions, strMeal, strMealThumb } = recepy;
+  const { strInstructions, strMeal, strMealThumb } = recepy;
 
-//  Muestra una receta en el DOM
-const mostrarRecetaModal = (receta) => {
-  const { idMeal, strInstructions, strMeal, strMealThumb } = receta;
+  const titleModal = document.querySelector('.modal .modal-title');
+  const bodyModal = document.querySelector('.modal .modal-body');
+  // const modalImage = document.querySelector('.modal .modal-image');
 
-  const modalTitle = document.querySelector('.modal .modal-title');
-  const modalBody = document.querySelector('.modal .modal-body');
-  const modalImage = document.querySelector('.modal .modal-image');
-
-  modalTitle.textContent = strMeal;
-  modalBody.innerHTML = `
+  titleModal.textContent = strMeal;
+  bodyModal.innerHTML = `
   <img class="img-fluid" src="${strMealThumb}" alt="Imagen de la receta ${strMeal}"/>
   <h3 class="my-3">Instrucciones</h3>
   <p>${strInstructions}</p>
@@ -130,10 +115,9 @@ const mostrarRecetaModal = (receta) => {
   const listGroup = document.createElement('ul');
   listGroup.classList.add('list-group');
 
-  // Mostrar ingredientes
   for (let i = 1; i <= 20; i++) {
-    const ingrediente = receta[`strIngredient${i}`];
-    const cantidad = receta[`strMeasure${i}`];
+    const ingrediente = recepy[`strIngredient${i}`];
+    const cantidad = recepy[`strMeasure${i}`];
 
     if (ingrediente) {
       const ingredienteElement = document.createElement('li');
@@ -141,27 +125,26 @@ const mostrarRecetaModal = (receta) => {
       ingredienteElement.textContent = `${ingrediente} - ${cantidad}`;
 
       listGroup.appendChild(ingredienteElement);
-    }
-  }
+    };
+  };
 
-  modalBody.appendChild(listGroup);
+  bodyModal.appendChild(listGroup);
 
   const modalFooter = document.querySelector('.modal-footer');
-  limpiarHTML(modalFooter);
+  cleanHtml(modalFooter);
 
-  // Bortones de favoritos y cerrar
   const btnFavoritos = document.createElement('button');
   btnFavoritos.classList.add('btn', 'btn-danger', 'col');
-  favoritosElement ? btnFavoritos.textContent = 'Quitar de favoritos' : btnFavoritos.textContent = 'Agregar a favoritos';
+  favoritesElement ? btnFavoritos.textContent = 'Quitar de favoritos' : btnFavoritos.textContent = 'Agregar a favoritos';
 
   btnFavoritos.onclick = () => {
-    if (favoritosElement) {
-      eliminarFavorito(receta)
+    if (favoritesElement) {
+      deleteFavorites(recepy)
       modalElement.hide();
       return;
     }
 
-    agregarFavorito(receta);
+    addFavorite(recepy);
   };
 
   const btnCerrar = document.createElement('button');
@@ -174,31 +157,24 @@ const mostrarRecetaModal = (receta) => {
   modalElement.show();
 };
 
-
-// Agreagar a favoritos
-const agregarFavorito = (receta) => {
-  const favoritos = obtenerFavoritos();
+const addFavorite = (receta) => {
+  const favoritos = getFavorites();
 
   if (!validarFavorito(receta, favoritos)) {
     const newFavoritos = [...favoritos, receta];
     localStorage.setItem('favoritos', JSON.stringify(newFavoritos));
-    mostrarToast('Receta agregada a favoritos');
+    showToast('Receta agregada a favoritos');
     return;
   } else {
-    mostrarToast('Esta receta ya existe en favoritos');
+    showToast('Esta receta ya existe en favoritos');
   }
 };
 
-// Obtiene los favoritos del local storage
-const obtenerFavoritos = () => JSON.parse(localStorage.getItem('favoritos')) || [];
+const getFavorites = () => JSON.parse(localStorage.getItem('favoritos')) || [];
 
-
-// Valida si la receta ya esta en favoritos
 const validarFavorito = (receta, favoritos) => favoritos.some((favorito) => favorito.idMeal === receta.idMeal);
 
-
-// Muestra toast
-const mostrarToast = (mensaje) => {
+const showToast = (mensaje) => {
   const toast = document.querySelector('#toast');
   const toastBody = document.querySelector('.toast-body');
   const bsToast = new bootstrap.Toast(toast);
@@ -207,35 +183,30 @@ const mostrarToast = (mensaje) => {
   bsToast.show();
 };
 
-
-// Muestra los favoritos en el DOM
-const mostrarFavoritos = () => {
-  const favoritos = obtenerFavoritos();
+const showFavorities = () => {
+  const favoritos = getFavorites();
 
   if (favoritos.length) {
-    mostrarRecetas(favoritos);
+    showRecipies(favoritos);
     return;
   }
   const titulo = document.createElement('h3');
   titulo.classList.add('text-center', 'text-black', 'my-5');
   titulo.textContent = 'No hay recetas favoritas';
-  favoritosElement.appendChild(titulo);
+  favoritesElement.appendChild(titulo);
 };
 
-
-// Elimina un favorito 
-const eliminarFavorito = (receta) => {
-  const favoritos = obtenerFavoritos();
+const deleteFavorites = (receta) => {
+  const favoritos = getFavorites();
   const newFavoritos = favoritos.filter((favorito) => favorito.idMeal !== receta.idMeal);
-  mostrarRecetas(newFavoritos);
+  showRecipies(newFavoritos);
 
   localStorage.setItem('favoritos', JSON.stringify(newFavoritos));
-  mostrarToast('Receta eliminada de favoritos');
+  showToast('Receta eliminada de favoritos');
 };
 
-// Cargar Eventos
 document.addEventListener('DOMContentLoaded', () => {
-  cargarCategorias();
-  categoriasSelectElement?.addEventListener('change', consultarRecetas);
-  if (favoritosElement) mostrarFavoritos();
+  getCategories();
+  categorySelectElement?.addEventListener('change', getRecepies);
+  if (favoritesElement) showFavorities();
 });
